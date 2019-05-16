@@ -1,0 +1,625 @@
+#%RAML 0.8
+title: Smart_Contract API 
+version: 1.0
+protocols: [ HTTPS ]
+mediaType: application/json
+baseUri: http://localhost:8081/console/
+    
+/Contract_Owned:
+  post:
+    description: This method will attribute a owner to the contract
+    queryParameters:
+         owner_address:
+                displayName: Owner Address
+                type: string
+                description: Address of the Contract owner
+                required: true
+                
+    responses:
+         201:
+                description: SUCCESS
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Address mapped correctly!", "Status":"201"}
+                       
+  get:
+      description: Address of the Contract owner 
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Address":"1xc5a96db085dda36ffbe390f455315d30d6d3dc52","Success":"True","Status":"200"}
+  
+  /{transferredOwnership}:
+    put:
+      description: Change the owner of the Smart Contract
+      queryParameters:
+       newOwner_address:
+         displayName: New owner address
+         type: string
+         description: Address of the new contract owner
+         required: true
+    
+      responses:
+        200:
+          body:
+            application/json:
+              example:  |
+                {"Success":"True","Status":"200"}
+ 
+  /{acceptOwnership}:
+    get:    
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"owner_address":"1xc5a96db085dda36ffbe390f455315d30d6d3dc52","newOwner_address":"0x3ff51120d34f4318b6aff85dbca5481dbf03f40b","Success":"True","Status":"200"}
+                 
+/Welcoin_Contract:
+  post:
+     description: This method will create a Smart Contract
+     queryParameters:
+         name:
+                displayName: Name
+                type: string
+                description: Name of the contract
+                required: true      
+         symbol: 
+                displayName: Symbol
+                type: string
+                description: Symbol of the token
+                required: true
+         decimals:
+                displayName: Decimals
+                type: integer
+                description: Decimals
+                required: true
+         totalSupply: 
+                displayName: Total supply
+                type: integer
+                description: Total number of supply
+                required: true
+         stepsTokenRate:
+                displayName: Steps token rate
+                type: integer
+                description: Number of steps
+                required: true
+         isRateActive: 
+                displayName: Is rate active
+                type: boolean
+                description: is rate active?
+                required: true
+         newIssue: 
+                displayName: New issue
+                type: boolean
+                description: Is new issue allowed?
+                required: true
+         contractAddress:
+                displayName: Contract address
+                type: string
+                description: Address of the Contract owner
+                required: true
+                
+     responses:
+         201:
+                description: SUCCESS
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Created"}
+         400:
+                description: BAD REQUEST
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Error!"}
+         500:
+                description: INTERNAL ERROR
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Error!"}
+                       
+  get:
+      responses:
+       200:
+        body:
+          application/json:
+            example: |
+              {
+                "data":
+                {
+                "name": "WelCoin",
+                "symbol": "Ether",
+                "decimals": "18",
+                "totalSupply": "1000",
+                "stepsTokenRate": "10^18",
+                "isRateActive": "True",
+                "newIssue": "False",
+                "Address": "1xc5a96db085dda36ffbe390f455315d30d6d3dc52",
+                },
+                "success": true,
+                "status": 200
+              }
+                       
+  /{balanceOf}:
+     get:
+      description: Total number of token of a generic subject 
+      queryParameters:
+       tokenOwner_address:
+         displayName: Token Owner address
+         type: string
+         description: Address of the person
+         required: true
+          
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Address":"1DkyBEKt5S2GDtv7aQw6rQepAvnsRyHoYM", "Balances":"30","Success":"True","Status":"200"}
+                
+  /{balanceOfOwner}:
+     get:
+       description: Total number of token of the Contract Owner
+       responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Balances_Owner":"1000","Success":"True","Status":"200"}
+                
+  /{totalSupply}:
+     get:
+      description: Total number of token 
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"totalSupply":"1000","Success":"True","Status":"200"}
+                
+  /{contractBalance}:
+     get:
+       description: Value of the contract in Ether
+       responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"ContractBalance":"20","Success":"True","Status":"200"}
+                
+  /{depositExchangedEther}:
+     put:
+      description: Deposit ether as token
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"exchangableToken":"100", "Owner_balances":"900", "Msg.Sender_balances":"140","Success":"True","Status":"200"}
+                
+  /{depositTokenSteps}:
+     put:
+      description: Steps to token assign
+      queryParameters:
+       steps:
+         displayName: Steps
+         type: integer
+         description: Number of steps
+         required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                 {"exchangableToken":"100","Owner_Balances":"900","Msg.Sender_Balances":"100","Success":"True","Status":"200"}
+                
+  /{virtualDepositTransferFrom}:
+     put:
+      queryParameters:
+       from_address:
+         displayName: From address
+         type: string
+         description: Address of challenge_owner
+         required: true
+       to_address:
+         displayName: To address
+         type: string
+         description: Address of challenge_winner
+         required: true     
+       tokens:
+         displayName: Tokens
+         type: string
+         description: Challenge_prize
+         required: true
+      
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Tokens":"100","From_Balances":"500","To_Balances":"200","Success":"True","Status":"200"}
+                
+  /{transfer}:
+     put:
+      queryParameters:
+       to_address:
+         displayName: To address
+         type: string
+         description: Address of the receiving subject
+         required: true
+       tokens:
+         displayName: Tokens
+         type: integer
+         description: Quantity of tokens transferred from the Contract_Owner to the other subject
+         required: true
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Tokens":"100","Owner_Balances":"500","To_Balances":"200","Success":"True","Status":"200"}                
+  /{approve}:
+     put:
+      queryParameters:
+       spender_address:
+         displayName: Spender address
+         type: string
+         description: Address of spender
+         required: true
+       tokens:  
+         displayName: Tokens
+         type: string
+         description: Max number of tokens that can be transferred from the Msg_Sender to the Spender_account 
+         required: true
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Msg_sender":"0x1f2284B6E214ecEeF5a97985C033A842017EfEfA","Spender_address":"0xC696512a6D0632FF391245771F2bEBa2CF27CB8f","tokens":"200","Success":"True","Status":"200"}
+                
+  /{transferFrom}:
+     put:
+      queryParameters:
+       from_address:
+         displayName: From address
+         type: string
+         description: address of the person who give permission to take
+         required: true
+       to_address:
+         displayName: To address
+         type: string
+         description: address of the person who is allowed to take
+         required: true
+       tokens:
+         displayName: Tokens
+         type: integer
+         description: Max number of tokens that can be transferred from the From_account to the To_account 
+         required: true
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"From_Address":"0x1f2284B6E214ecEeF5a97985C033A842017EfEfA","To_Address":"0xC696512a6D0632FF391245771F2bEBa2CF27CB8f","tokens":"300","Success":"True","Status":"200"}
+                
+  /{allowance}:
+     get:
+      queryParameters:
+       tokenOwner_address:
+         displayName: Token owner address
+         type: string
+         description: address of the person who give permission to take
+         required: true
+       address_spender:
+         type: string
+         description: address of the person who is allowed to take
+         required: true  
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"tokens":"200","Success":"True","Status":"200"}
+
+  /{issueTokens}:
+     put:
+      queryParameters:
+       amount:
+         displayName: Amount
+         type: integer
+         description: New token issuing 
+         required: true
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Owner_balances":"3500","TotalSupply":"3500","Amount":"500","Success":"True","Status":"200"}
+                
+                
+/ChallengeManager_Contract:
+  post:
+     description: This method will create a Challenge
+     queryParameters:
+         name:
+                displayName: Name
+                type: string
+                description: the name of the challenge
+                required: true      
+         description: 
+                displayName: Challenge description
+                type: string
+                description: description of the challenge
+                required: true
+         targetDescription:
+                displayName: Target description
+                type: integer
+                description: description of the challenge's goal
+                required: true
+         timeStamp: 
+                displayName: TimeStamp
+                type: integer
+                description: timestamping 
+                required: true
+         prize:
+                displayName: Prize
+                type: integer
+                description: the Prize amount in Tokens
+                required: true
+         target: 
+                displayName: Target
+                type: boolean
+                description: the Goal in goal's units
+                required: true
+         fee: 
+                displayName: Fee
+                type: boolean
+                description: the amount of Token for subscription to the Challenge
+                required: true
+         owner_address:
+                displayName: Owner challenge Address
+                type: string
+                description: unique identifier for the whole challenge
+                required: true
+                
+     responses:
+         201:
+                description: SUCCESS
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Challenge created"}
+         400:
+                description: BAD REQUEST
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Error!"}
+         500:
+                description: INTERNAL ERROR
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Error!"}
+                       
+  get:
+      responses:
+       200:
+        body:
+          application/json:
+            example: |
+              {
+                "Challenge_data":
+                {
+                "name": "AThousandSteps",
+                "description": "do a thousand steps in a day",
+                "targetDescription": "Thousand steps in 24 hours",
+                "timeStamp": "Sat Jul 23 02:16:57 2005",
+                "prize": "100",
+                "target": "1000",
+                "fee": "300",
+                "owner_address": "1xc5a96db085dda36ffbe390f455315d30d6d3dc52"
+                },
+                "success": true,
+                "status": 200
+              }
+              
+  /{partecipateToChallenge}:
+    put:
+      description: add a participate to a challenge
+      queryParameters:
+       contractadd_address:
+         displayName: TokenContract_address
+         type: string
+         description: Address of the Token Contract (ossia wellcoin.sol)
+         required: true
+       hash:
+         displayName: Challenge_hash 
+         type: string
+         description: Unique identifier of the challenge
+         required: true
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                 {"Success":"True","Status":"200"}
+    
+  /{depositGoalUnit}:
+    put:
+     description: deposit a certain unit amount of the Goal
+     queryParameters:
+       goalUnit:
+         displayName: Goal unit
+         type: integer
+         description: The amount of unit to deposit
+         required: true
+       hash:
+         displayName: Challenge_hash 
+         type: string
+         description: Unique identifier of the challenge
+         required: true
+         
+     responses:
+        200:
+          body:
+            application/json:
+              example: |
+                 {"Success":"True","Status":"200"}
+  
+  /{issuePrize}:  
+    delete:
+     description: deleting Challenge from challenges list
+     queryParameters:
+       contractadd_address:
+         displayName: TokenContract_address
+         type: string
+         description: Address of the Token Contract (ossia wellcoin.sol)
+         required: true
+       hash:
+         displayName: Challenge_hash 
+         type: string
+         description: Unique identifier of the challenge
+         required: true
+         
+     responses:
+        200:
+          body:
+            application/json:
+              example: |
+                 {"Challenge deleted":"1xc5a96db085dda36ffbe390f455315d30d6d3dc52","Success":"True","Status":"200"}
+
+  /{getChallengePartecipantsGoal}:
+   get:
+      description: returns the deposited goal of the sender
+      queryParameters:
+       hash:
+         displayName: Challenge_hash
+         type: string
+         description: Unique identifier of the challenge
+         required: true
+         
+      responses:
+       200:
+        body:
+          application/json:
+            example: |
+              {
+                "Challenge_hash": "1DkyBEKt5S2GDtv7aQw6rQepAvnsRyHoYM", 
+                {
+                "0x0571325cd46718cd9445f082332a4fd9a21b8498": "320",
+                "0x281055afc982d96fab65b3a49cac8b878184cb16": "200",
+                "0x10bd9990f4fe597c010c911f0640bbb143438fff": "500",
+                "0x98f4af3af0aede5fafdc42a081ecc1f89e3ccf20": "150",
+                "0x603ca09aa85443b2b540305a3fe4158a07259836": "700",
+                "0x3c2d067fd26fd9f56ec1b41560ff744fdaf6acd3": "580",
+                "0xc683d797e054429a96a3e3c2f90ea7fb0af4aea2": "460",
+                },
+                "success": true,
+                "status": 200
+              }   
+   
+  /{setContractAddress}: 
+   post:
+    description: Set the address of the tied Token
+    queryParameters:
+         contAdd_dress:
+                displayName: TokenContract_Address
+                type: string
+                description: Address of the Token Contract (WellCoin.sol)
+                required: true
+                
+    responses:
+         201:
+                description: SUCCESS
+                body: 
+                  application/json:
+                    example: |
+                       {"message": "Address mapped correctly!"}
+                           
+  /{getChallengeParticipantsLength}:
+    get:
+      queryParameters:
+       challIndex_address:
+         displayName: challengerParticipants
+         type: integer
+         description: Number of the participants at the challenge
+         required: true
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Participants":"12","Success":"True","Status":"200"}
+    
+    
+  /{getChallengeParticipants}:
+    get:
+      queryParameters:
+       index_1:
+         displayName: Challenge N°
+         type: integer
+         description: Number of the challenge
+         required: true
+       index_2:
+         displayName: Participant N°
+         type: integer
+         description: Number of the participant in the Challenge_list
+         required: true  
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Participant_address":"0x98f4af3af0aede5fafdc42a081ecc1f89e3ccf20","Success":"True","Status":"200"}
+    
+  /{getChallengeParticipantsGoal}:
+    get:
+      queryParameters:
+       index1:
+         displayName: Challenge N°
+         type: integer
+         description: Number of the challenge
+         required: true
+       index2:
+         displayName: Participant N°
+         type: integer
+         description: Number of the participant in the Challenge_list
+         required: true  
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Participant_goal":"450","Success":"True","Status":"200"}
+    
+  /{getChallengeWinner}:
+    get:
+      queryParameters:
+       index1:
+         displayName: Challenge N°
+         type: string
+         description: Number of the challenge
+         required: true  
+         
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"Challenge_Winner":"0x0571325cd46718cd9445f082332a4fd9a21b8498","Success":"True","Status":"200"}
